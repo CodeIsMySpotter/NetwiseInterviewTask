@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.HttpResults;
-using WebApp.Services;
+using WebApp.Core.Services;
+using WebApp.Core.Exceptions;
 
-namespace WebApp.Controllers;
+namespace WebApp.Core.Controllers;
 
 
 [ApiController]
@@ -17,7 +18,7 @@ public class FactsController(
     public async Task<IActionResult> AskFactEndpoint()
     {
         var response = await _fetchService.FetchResponseAsync();
-        if (response?.Fact == null) return BadRequest("Błąd pobierania danych z zewnętrznego API");
+        if (response?.Fact == null) throw new AskRequestErrorException("Failed to fetch data from the external API");
         await _storageService.SaveFactAsync(response.Fact);
 
         return Ok("Ok");

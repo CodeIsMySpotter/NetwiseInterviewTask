@@ -1,7 +1,7 @@
 using System.IO;
 using System.Threading;
 
-namespace WebApp.Services;
+namespace WebApp.Core.Services;
 
 
 public interface ILocalStorageService
@@ -11,9 +11,9 @@ public interface ILocalStorageService
 }
 
 
-public class LocalStorageService : ILocalStorageService
+public class LocalStorageService(IConfiguration config) : ILocalStorageService
 {
-    private readonly string _filePath = "facts.txt";
+    private readonly string _filePath = config["FactSettings:FilePath"] ?? "facts.txt";
     private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
     public async Task SaveFactAsync(string fact)
@@ -21,6 +21,12 @@ public class LocalStorageService : ILocalStorageService
         await _semaphore.WaitAsync();
         try
         {
+            var directory = Path.GetDirectoryName(_filePath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
             await File.AppendAllTextAsync(_filePath, fact + Environment.NewLine);
         }
         finally
