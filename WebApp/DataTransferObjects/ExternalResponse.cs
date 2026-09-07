@@ -1,3 +1,3 @@
 namespace WebApp.DataTransferObject;
 
-public record ExternalResponse(string Content, int Length);
+public record ExternalResponse(string Fact, int Length);

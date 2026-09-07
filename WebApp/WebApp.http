@@ -1,6 +1,9 @@
 @WebApp_HostAddress = http://localhost:5205
 
-GET {{WebApp_HostAddress}}/weatherforecast/
+###
+POST {{WebApp_HostAddress}}/facts/ask
 Accept: application/json
 
 ###
+GET {{WebApp_HostAddress}}/facts/file
+Accept: text/plain
