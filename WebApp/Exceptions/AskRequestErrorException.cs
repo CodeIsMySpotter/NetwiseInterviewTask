@@ -1,4 +1,4 @@
-﻿namespace WebApp.Core.Exceptions;
+namespace WebApp.Exceptions;
 
 public class AskRequestErrorException : Exception
 {

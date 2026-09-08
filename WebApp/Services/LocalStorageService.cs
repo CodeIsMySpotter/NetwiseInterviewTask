@@ -1,8 +1,10 @@
 using System.IO;
 using System.Threading;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Hosting;
+using WebApp.Models;
 
-namespace WebApp.Core.Services;
-
+namespace WebApp.Services;
 
 public interface ILocalStorageService
 {
@@ -10,10 +12,9 @@ public interface ILocalStorageService
     Task<string> GetFileAsync();
 }
 
-
-public class LocalStorageService(IConfiguration config) : ILocalStorageService
+public class LocalStorageService(IOptions<FactSettings> options, IWebHostEnvironment env) : ILocalStorageService
 {
-    private readonly string _filePath = config["FactSettings:FilePath"] ?? "facts.txt";
+    private readonly string _filePath = Path.Combine(env.ContentRootPath, options.Value.FilePath);
     private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
     public async Task SaveFactAsync(string fact)
@@ -34,7 +35,6 @@ public class LocalStorageService(IConfiguration config) : ILocalStorageService
             _semaphore.Release();
         }
     }
-
 
     public async Task<string> GetFileAsync()
     {

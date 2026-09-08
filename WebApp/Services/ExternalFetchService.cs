@@ -1,21 +1,20 @@
-﻿using WebApp.Core.DataTransferObject;
 using System.Net.Http.Json;
-using WebApp.Core.Exceptions;
-namespace WebApp.Core.Services;
+using Microsoft.Extensions.Options;
+using WebApp.Models;
+using WebApp.Exceptions;
 
+namespace WebApp.Services;
 
 public interface IExternalFetchService
 {
     Task<ExternalResponse> FetchResponseAsync();
-
 }
 
-
-public class ExternalFetchService(HttpClient httpClient, IConfiguration config) : IExternalFetchService
+public class ExternalFetchService(HttpClient httpClient, IOptions<FactSettings> options) : IExternalFetchService
 {
     public async Task<ExternalResponse> FetchResponseAsync()
     {
-        var url = config["FactSettings:ApiUrl"] ?? "https://catfact.ninja/fact";
+        var url = options.Value.ApiUrl;
         var response = await httpClient.GetFromJsonAsync<ExternalResponse>(url);
         if (response == null) throw new AskRequestErrorException("External API fetch failed");
         return response;

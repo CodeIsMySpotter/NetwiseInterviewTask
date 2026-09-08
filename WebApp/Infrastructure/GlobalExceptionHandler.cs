@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using WebApp.Core.Exceptions;
+using WebApp.Exceptions;
 
-namespace WebApp.Core.Infrastructure;
+namespace WebApp.Infrastructure;
 
 public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
@@ -14,10 +14,8 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
 
         logger.LogError(exception, "An unexpected error occurred: {Message}", exception.Message);
 
-
         var (statusCode, title) = exception switch
         {
-
             AskRequestErrorException => (StatusCodes.Status404NotFound, "External API returned no facts"),
             HttpRequestException => (StatusCodes.Status502BadGateway, "Error communicating with the external API"),
             IOException => (StatusCodes.Status503ServiceUnavailable, "Problem accessing the file"),
