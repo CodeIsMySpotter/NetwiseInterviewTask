@@ -1,15 +1,17 @@
 # NetwiseInterviewTask
 
+# NetwiseInterviewTask
+
 
 ## What is it about
 This repository contains a finished simple web application. The app connects to specific endpoint, read the response and then write the response to .txt file
 
 
 ## Technologies used
-- **.NET 8** (C# 12)
+- **.NET 9** (C# 12)
 - **ASP.NET Core Web API**
+- **Vanilla HTML/CSS/JS** for the frontend UI
 - **Docker & Docker Compose** for containerization
-- **Swagger / OpenAPI** for API documentation
 
 ## How to run
 
@@ -18,6 +20,9 @@ You can easily spin up the application using Docker Compose from the root direct
 ```bash
 docker-compose up --build -d
 ```
+This will start both the backend API and the frontend UI.
+- **Frontend UI** will be available at: `http://localhost:3000`
+- **Backend API** will be available at: `http://localhost:5205`
 
 ### Using .NET CLI
 To run the application locally without Docker:
@@ -25,7 +30,7 @@ To run the application locally without Docker:
 cd WebApp
 dotnet run
 ```
-Once the application is running, you can access the **Swagger UI** to test the endpoints by navigating to `/swagger` in your browser.
+Then simply open `FrontApp/index.html` in your browser to interact with the API.
 
 ## API Endpoints
 - **`POST /facts/ask`**: Fetches a random cat fact from an external API and appends it to a local text file.
