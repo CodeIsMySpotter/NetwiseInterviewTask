@@ -22,9 +22,11 @@ public class FactsController(
     }
 
     [HttpGet("file")]
-    public async Task<IActionResult> GetTxtFile()
+    public IActionResult GetTxtFile()
     {
-        var content = await storageService.GetFileAsync();
-        return Ok(content);
+        var stream = storageService.GetFileStream();
+        if (stream == null) return Ok(string.Empty);
+
+        return File(stream, "text/plain", "facts.txt");
     }
 }

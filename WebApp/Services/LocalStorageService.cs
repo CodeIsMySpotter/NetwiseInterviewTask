@@ -9,7 +9,7 @@ namespace WebApp.Services;
 public interface ILocalStorageService
 {
     Task SaveFactAsync(string fact);
-    Task<string> GetFileAsync();
+    Stream? GetFileStream();
 }
 
 public class LocalStorageService(IOptions<FactSettings> options, IWebHostEnvironment env) : ILocalStorageService
@@ -36,21 +36,13 @@ public class LocalStorageService(IOptions<FactSettings> options, IWebHostEnviron
         }
     }
 
-    public async Task<string> GetFileAsync()
+    public Stream? GetFileStream()
     {
         if (!File.Exists(_filePath))
         {
-            return string.Empty;
+            return null;
         }
 
-        await _semaphore.WaitAsync();
-        try
-        {
-            return await File.ReadAllTextAsync(_filePath);
-        }
-        finally
-        {
-            _semaphore.Release();
-        }
+        return new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
     }
 }
